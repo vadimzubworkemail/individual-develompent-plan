@@ -1,0 +1,45 @@
+Выбираем из пространства:
+    box.space.bands:select()
+Вывод:
+    ---
+    - - [1, 'Roxette', 1986]
+      - [2, 'The Doors', 2015]
+      - [3, 'Ace of Base', 1993]
+      - [4, 'The Beatles', 1960]
+      - [5, 'The Time Machine', 1965]
+    ...
+
+Заменяем существующий кортеж:
+    box.space.bands:replace{3, 'Pink Floyd', 1965}
+Вывод:
+    ---
+    - [3, 'Pink Floyd', 1965]
+    ...
+Проверяем:
+        box.space.bands:select()
+Вывод:
+    ---
+    - - [1, 'Roxette', 1986]
+      - [2, 'The Doors', 2015]
+      - [3, 'Pink Floyd', 1965]
+      - [4, 'The Beatles', 1960]
+      - [5, 'The Time Machine', 1965]
+    ...
+
+Заменяем несуществующий кортеж:
+    box.space.bands:replace{6, 'AC/DC', 1969}
+Вывод:
+    ---
+    - [6, 'AC/DC', 1969]
+    ...
+Проверяем:
+    box.space.bands:select()
+Вывод:
+    ---
+    - - [1, 'Roxette', 1986]
+      - [2, 'The Doors', 2015]
+      - [3, 'Pink Floyd', 1965]
+      - [4, 'The Beatles', 1960]
+      - [5, 'The Time Machine', 1965]
+      - [6, 'AC/DC', 1969]
+    ...

@@ -1,0 +1,72 @@
+Создаем последовательность:
+    box.schema.sequence.create('id_seq', {min=1000, start=1000})
+Вывод:
+    ---
+    - step: 1
+      id: 1
+      min: 1000
+      cache: 0
+      uid: 1
+      cycle: false
+      name: id_seq
+      start: 1000
+      max: 9223372036854775807
+    ...
+
+Получаем следующее значение из последовательности:
+    box.sequence.id_seq:next()
+Вывод:
+    ---
+    - 1000
+    ...
+
+Создаем пространство и генерируем primary index из последовательности:
+    box.schema.space.create('customers')
+Вывод:
+    ---
+    - engine: memtx
+      before_replace: 'function: 0x7f4499a2f2d0'
+      field_count: 0
+      is_sync: false
+      is_local: false
+      on_replace: 'function: 0x7f4499a2f298'
+      temporary: false
+      index: []
+      type: normal
+      enabled: false
+      name: customers
+      id: 512
+    - created
+    ...
+
+box.space.customers:create_index('primary', {sequence = 'id_seq'})
+Вывод:
+    ---
+    - parts:
+      - fieldno: 1
+        sort_order: asc
+        type: unsigned
+        exclude_null: false
+        is_nullable: false
+      sequence_id: 1
+      id: 0
+      space_id: 512
+      unique: true
+      hint: true
+      type: TREE
+      name: primary
+      sequence_fieldno: 1
+    ...
+
+Вставляем кортеж без указания primary index:
+    box.space.customers:insert{nil, 'Thomas'}
+Вывод:
+    ---
+    - [1001, 'Thomas']
+    ...
+Проверяем:
+    box.space.customers:select()
+Вывод:
+    ---
+    - - [1001, 'Thomas']
+    ...

@@ -1,0 +1,115 @@
+Запускаем экземпляр Tarantool в контейнере командой:
+docker run --name mytarantool -d -p 3301:3301 tarantool/tarantool:latest
+
+Проверяем запущенные контейнеры:
+    $ docker container ls
+Вывод в консоли:
+    CONTAINER ID   IMAGE                        COMMAND                  CREATED          STATUS                    PORTS                    NAMES
+    9bcc543c6d64   tarantool/tarantool:latest   "/docker-entrypoint.…"   14 minutes ago   Up 14 minutes (healthy)   0.0.0.0:3301->3301/tcp   mytarantool
+
+Подключаемся к серверу Tarantool:
+    docker exec -it mytarantool console
+Вывод в консоли:
+       • Connecting to the instance...
+       • Connected to /var/run/tarantool/sys_env/default/instance-001/tarantool.control
+
+Создаем новое пространство:
+    s = box.schema.space.create('tester')
+Вывод в консоли:
+    ---
+    ...
+
+Форматируем созданое пространство:
+    s:format({
+    {name = 'id', type = 'unsigned'},
+    {name = 'band_name', type = 'string'},
+    {name = 'year', type = 'unsigned'}
+    })
+Вывод в консоли:
+    ---
+    ...
+
+Создаем индекс пространства:
+    s:create_index('primary', {
+    type = 'tree',
+    parts = {'id'}
+    })
+Вывод в консоли:
+    ---
+    - unique: true
+      parts:
+      - fieldno: 1
+        sort_order: asc
+        type: unsigned
+        exclude_null: false
+        is_nullable: false
+      hint: true
+      id: 0
+      type: TREE
+      space_id: 512
+      name: primary
+    ...
+
+Добавляем вторичный ключ:
+    s:create_index('secondary', {
+    type = 'tree',
+    parts = {'band_name'}
+    })
+Вывод:
+    ---
+    - unique: true
+      parts:
+      - fieldno: 2
+        sort_order: asc
+        type: string
+        exclude_null: false
+        is_nullable: false
+      hint: true
+      id: 1
+      type: TREE
+      space_id: 512
+      name: secondary
+    ...
+
+Создаем не уникальный secondary index:
+    box.space.tester:create_index('year', { parts = { { 'year' } }, unique = false })
+Вывод:
+    ---
+    - unique: false
+      parts:
+      - fieldno: 3
+        sort_order: asc
+        type: unsigned
+        exclude_null: false
+        is_nullable: false
+      hint: true
+      id: 2
+      type: TREE
+      space_id: 512
+      name: year
+    ...
+
+Создаем multi-part index:
+    box.space.tester:create_index('year_band', { parts = { { 'year' }, { 'band_name' } } })
+Вывод:
+    ---
+    - unique: true
+      parts:
+      - fieldno: 3
+        sort_order: asc
+        type: unsigned
+        exclude_null: false
+        is_nullable: false
+      - fieldno: 2
+        sort_order: asc
+        type: string
+        exclude_null: false
+        is_nullable: false
+      hint: true
+      id: 3
+      type: TREE
+      space_id: 512
+      name: year_band
+    ...
+
+

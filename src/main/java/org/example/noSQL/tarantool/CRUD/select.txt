@@ -1,0 +1,32 @@
+Выбор всех кортежей из пространства:
+    s:select()
+Вывод:
+    ---
+    - - [1, 'Roxette', 1986]
+      - [2, 'Scorpions', 2015]
+      - [3, 'Ace of Base', 1993]
+    ...
+
+Выбор по primary индексу:
+    s:select(3)
+Вывод:
+    ---
+    - - [3, 'Ace of Base', 1993]
+    ...
+
+Выбор по secondary индексу:
+    s.index.secondary:select{'Scorpions'}
+Вывод:
+    ---
+    - - [2, 'Scorpions', 2015]
+    ...
+
+Выбор всех пространств:
+    box.space._space:select()
+Выбор пространства по id:
+    box.space._space:select{ 288 }
+Выбор пространства по имени:
+    box.space._space.index.name:select{'bands'}
+
+
+

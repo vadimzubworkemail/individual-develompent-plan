@@ -1,0 +1,46 @@
+Переименовываем пространство:
+    box.space.tester:rename('bands')
+Вывод:
+    ---
+    ...
+Проверяем:
+    box.space.bands:select()
+Вывод:
+---
+- - [1, 'Roxette', 1986]
+  - [2, 'Scorpions', 2015]
+  - [3, 'Ace of Base', 1993]
+  - [4, 'The Beatles', 1960]
+...
+
+Обновляем кортеж по primary index:
+    box.space.bands.index.primary:update({2}, {{'=', 2, 'The Rolling Stones'}})
+Вывод:
+    ---
+    - [2, 'The Rolling Stones', 2015]
+    ...
+Проверяем:
+    box.space.bands:select()
+Вывод:
+    ---
+    - - [1, 'Roxette', 1986]
+      - [2, 'The Rolling Stones', 2015]
+      - [3, 'Ace of Base', 1993]
+      - [4, 'The Beatles', 1960]
+    ...
+
+Обновляем кортеж по secondary index:
+    box.space.bands.index.secondary:update({'The Rolling Stones'}, {{'=', 2, 'The Doors'}})
+Вывод:
+    ---
+    - [2, 'The Doors', 2015]
+    ...
+Проверяем:
+    box.space.bands:select()
+Вывод:
+    ---
+    - - [1, 'Roxette', 1986]
+      - [2, 'The Doors', 2015]
+      - [3, 'Ace of Base', 1993]
+      - [4, 'The Beatles', 1960]
+    ...
