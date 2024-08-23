@@ -1,0 +1,13 @@
+Вставляем в созданое пространство 3 кортежа:
+    s:insert{1, 'Roxette', 1986}
+    s:insert{2, 'Scorpions', 2015}
+    s:insert{3, 'Ace of Base', 1993}
+
+Проверяем:
+    s:select()
+Вывод:
+    ---
+    - - [1, 'Roxette', 1986]
+      - [2, 'Scorpions', 2015]
+      - [3, 'Ace of Base', 1993]
+    ...

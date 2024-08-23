@@ -1,1 +1,1 @@
-# individual-develompent-plan
+# individual-development-plan
